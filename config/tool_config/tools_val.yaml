@@ -1,0 +1,59 @@
+# Official Tool Configuration with Search for Validation
+#
+# This config includes 2 tools:
+# - text_search_tool: Text search for validation (uses local retrieval)
+# - image_search_tool: Reverse image search
+#
+# Usage:
+#   actor_rollout_ref.rollout.multi_turn.val_tool_config_path="path/to/tools_official_with_search_val.yaml"
+
+tools:
+  # Text Search Tool - uses local_retrieval for validation
+  - class_name: verl.tools.text_search_tool.TextSearchTool
+    config:
+      type: native
+      text_search_type: local_retrieval
+      text_search_address: ${oc.env:TEXT_SEARCH_ADDRESS}
+      local_database_address: ${oc.env:LOCAL_DATABASE_ADDRESS}
+      text_search_topk: 3
+      text_search_llm_model: "qwen3-32b"
+      text_search_prompt_type: "mmsearch_r1"
+      text_search_use_jina: false
+      text_search_enable_thinking: false
+      max_concurrent: 4
+      timeout: 300
+      max_attempts: 3
+      text_search_fail_fast: false
+      max_text_search_calls: 4
+    tool_schema:
+      type: function
+      function:
+        name: text_search_tool
+        description: "Use this tool when the entity is already known but the question still cannot be answered from current context. It helps gather external textual evidence to complete reasoning."
+        parameters:
+          type: object
+          properties:
+            query:
+              type: string
+              description: "The search query to find relevant information"
+          required:
+            - query
+
+  # Image Search Tool - data-driven reverse image search
+  - class_name: verl.tools.image_search_tool.ImageSearchTool
+    config:
+      type: native
+      tcs_conf_path: "~/object_storage.conf"
+      use_image_search_summary: false
+      max_image_search_calls: 3
+      image_search_return_k: 3
+      summary_max_attempts: 6
+    tool_schema:
+      type: function
+      function:
+        name: image_search_tool
+        description: "Use this tool when the key entity in the image is unknown or uncertain. It helps identify what/who is shown by retrieving visually similar examples and related evidence."
+        parameters:
+          type: object
+          properties: {}
+          required: []

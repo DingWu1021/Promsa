@@ -1,0 +1,12 @@
+python -u Search-R1/search_r1/search/retrieval_server.py \
+  --index_path wiki_202050901/e5_Flat.index \
+  --corpus_path wiki_20250901/formatted_wiki.jsonl \
+  --topk 3 \
+  --retriever_name e5 \
+  --retriever_model intfloat/e5-large-v2 \
+
+    parser.add_argument("--index_path", type=str, default="/path/to/wiki/e5_Flat.index", help="Corpus indexing file.")
+    parser.add_argument("--corpus_path", type=str, default="/path/to/wiki/formatted_wiki.jsonl", help="Local corpus file.")
+
+    --faiss_gpu \
+    如果faiss换成gpu版本换成这个指令

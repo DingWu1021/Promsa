@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProMSA · Progressive Multimodal Search Agents for KB-VQA</title>
+  <meta name="description" content="ProMSA: a progressive multimodal search agent for knowledge-based visual question answering, trained with TN-GSPO. Accepted to ECCV 2026.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="ProMSA — Progressive Multimodal Search Agents for KB-VQA">
+  <meta property="og:description" content="An MLLM agent that learns when to retrieve, which modality to use, and when to stop. ECCV 2026.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="static/images/overview.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="static/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- KaTeX (math) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="loading">
+
+  <!-- ============================== INTRO SPLASH ============================== -->
+  <div id="splash" class="splash" role="presentation">
+    <div class="splash__inner">
+      <svg class="splash__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FF6B5C"/>
+            <stop offset="0.5" stop-color="#6C5CE7"/>
+            <stop offset="1" stop-color="#00B8BE"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring" cx="27" cy="27" r="12.5" fill="none" stroke="url(#sg)" stroke-width="5"/>
+        <line class="handle" x1="36.5" y1="36.5" x2="49" y2="49" stroke="url(#sg)" stroke-width="5.5" stroke-linecap="round"/>
+        <circle class="focusdot" cx="27" cy="27" r="3.6" fill="#fff"/>
+      </svg>
+      <div class="splash__word">Pro<span>MSA</span></div>
+      <div class="splash__trace" aria-hidden="true">
+        <span class="sdot sdot--image"></span>
+        <span class="sbar"></span>
+        <span class="sdot sdot--text"></span>
+        <span class="sbar"></span>
+        <span class="sdot sdot--stop"></span>
+      </div>
+      <div class="splash__hint">searching<span class="ell">…</span></div>
+    </div>
+    <button class="splash__skip" id="splashSkip" type="button">Skip ›</button>
+  </div>
+
+  <!-- ============================== NAV ============================== -->
+  <nav class="nav">
+    <div class="wrap">
+      <span class="nav__brand">ProMSA<span class="dot">.</span></span>
+      <div class="nav__links">
+        <a href="#abstract">Abstract</a>
+        <a href="#trajectory">How it searches</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#bibtex">BibTeX</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================== HERO ============================== -->
+  <header class="hero">
+    <div class="wrap">
+      <span class="hero__eyebrow">★ Accepted to ECCV 2026</span>
+
+      <h1 class="hero__title"><span class="pro">Pro</span><span class="msa">MSA</span></h1>
+      <p class="hero__sub">Progressive Multimodal Search Agents for Knowledge-Based Visual Question Answering</p>
+      <p class="hero__tagline">An MLLM agent that learns <b>when to retrieve, which modality to use, and when to stop</b> — trained end-to-end with <b>TN-GSPO</b>, a tool-horizon-normalized sequence-level RL objective.</p>
+
+      <!-- links — replace href="#" with real URLs when available -->
+      <div class="btns">
+        <a class="btn btn--primary" href="#" aria-label="Paper PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg>
+          Paper
+        </a>
+        <a class="btn" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16"/></svg>
+          arXiv
+        </a>
+        <a class="btn" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.6.7 5.6 1 5.6 1a4.3 4.3 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 7.4c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V19z"/></svg>
+          Code
+        </a>
+        <a class="btn" href="#bibtex">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          BibTeX
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================== OVERVIEW FIGURE ============================== -->
+  <div class="wrap hero-figure">
+    <figure class="figcard reveal">
+      <img src="static/images/overview.png" alt="Overview of ProMSA: input and goal, progressive search loop, and TN-GSPO training.">
+      <figcaption class="figcap"><b>Overview of ProMSA.</b> (1) Image–question input and goal. (2) The progressive search loop — at each round the policy thinks, then chooses image search, text search, or stop, retrieving over Wikipedia with de-duplication. (3) Training with the tool-horizon-normalized sequence-level objective, TN-GSPO.</figcaption>
+    </figure>
+  </div>
+
+  <main>
+
+  <!-- ============================== ABSTRACT ============================== -->
+  <section id="abstract" class="abstract">
+    <div class="wrap">
+      <div class="abstract__head">
+        <span class="section-tag">Abstract</span>
+        <h2 class="section-title">Search like a budget-aware researcher</h2>
+      </div>
+      <p class="reveal">
+        Knowledge-based Visual Question Answering (KB-VQA) requires models to combine image understanding with external knowledge. Most prior methods use a fixed retrieve-then-generate pipeline with a pre-selected retriever and a static top-<i>k</i> setting, which is not adaptive during reasoning. We propose <b>ProMSA</b>, a progressive multimodal search agent for KB-VQA. Given an image–question pair, the agent iteratively chooses image search, text search, or stop, under explicit tool-call budgets and with deduplication to avoid redundant retrieval. For training, we first use rejection-sampling SFT to learn valid tool-use formats, then optimize the agent with <b>TN-GSPO</b>, a sequence-level RL objective that normalizes updates by both generation length and tool-interaction depth. Experiments on E-VQA and InfoSeek show consistent gains over strong RAG and agent baselines, and improved retrieval and end-to-end accuracy.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================== TRAJECTORY TRACE (signature) ============================== -->
+  <section id="trajectory" class="trace">
+    <div class="wrap">
+      <span class="section-tag">A trajectory, round by round</span>
+      <h2 class="section-title">Retrieval becomes part of the reasoning</h2>
+      <p class="lead">Instead of one fixed retrieval step, ProMSA unrolls a short, budgeted trajectory. It can switch modality and re-search with a de-duplication list when the first attempt drifts — then stop the moment the evidence is enough.</p>
+
+      <div class="trace__q reveal">
+        <span class="imgthumb" aria-hidden="true"></span>
+        <span><b style="color:#fff">Question</b> &nbsp; In which country is this lake located?</span>
+      </div>
+
+      <div class="trace__rounds">
+        <div class="round reveal">
+          <div class="round__no">Round 01</div>
+          <p class="round__think">The lake isn't identifiable from the image alone — find the entity visually.</p>
+          <span class="chip chip--image"><span class="d"></span> image&nbsp;search</span>
+          <p class="round__obs">Top candidate page:<br><b>Lake Köyceğiz</b> &nbsp;<span style="color:var(--muted-2)">(prior pages excluded)</span></p>
+        </div>
+
+        <div class="round reveal d1">
+          <div class="round__no">Round 02</div>
+          <p class="round__think">Entity likely identified — confirm the country with a rewritten text query.</p>
+          <span class="chip chip--text"><span class="d"></span> text&nbsp;search</span>
+          <p class="round__obs">query: <i>"Lake Köyceğiz country location"</i><br><b>"…a lake in southwestern Turkey."</b></p>
+        </div>
+
+        <div class="round reveal d2">
+          <div class="round__no">Round 03</div>
+          <p class="round__think">Evidence is sufficient and consistent — stop and answer.</p>
+          <span class="chip chip--stop"><span class="d"></span> stop</span>
+          <p class="round__ans">→ <span class="badge">Turkey</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== TEASER / COMPARISON ============================== -->
+  <section id="why">
+    <div class="wrap">
+      <span class="section-tag">Why adaptive search</span>
+      <h2 class="section-title">Fixed pipelines can't recover from a wrong start</h2>
+      <p class="lead">A single-shot RAG pipeline that drifts to the wrong entity is forced to answer on bad evidence. ProMSA re-searches with exclusion, switches between image and text retrieval, and accumulates evidence across rounds.</p>
+      <figure class="figcard reveal" style="margin-top:1.8rem;">
+        <img src="static/images/teaser.png" alt="Comparison of direct answering, RAG-based retrieval, and the ProMSA progressive search agent.">
+        <figcaption class="figcap"><b>Direct answering vs. fixed RAG vs. ProMSA.</b> Where RAG locks onto an incorrect page, the agent corrects course and grounds its answer in the right evidence.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============================== METHOD / TN-GSPO ============================== -->
+  <section id="method">
+    <div class="wrap">
+      <span class="section-tag">Method · TN-GSPO</span>
+      <h2 class="section-title">Normalize by the tool horizon, not just the length</h2>
+
+      <div class="grid-2">
+        <div class="reveal">
+          <p class="lead" style="font-size:1.05rem">
+            In a search agent, what makes a trajectory hard is its <b>tool-interaction depth</b> <i>H</i> — how many retrievals it took — not the raw number of tokens. Standard GSPO normalizes the sequence ratio by generation length <i>L</i> alone, which biases the policy toward shorter outputs. <b>TN-GSPO</b> folds the tool horizon into the normalizer:
+          </p>
+          <div class="eqbox reveal d1" style="margin-top:1.2rem">
+            <div>$$ D(\tau) = L(\tau)\,\bigl(1 + c\,H(\tau)^{\alpha}\bigr), \qquad r_\theta(\tau) = \exp\!\Bigl(\tfrac{1}{D(\tau)}\!\!\sum_{t\in T_\text{gen}}\!\! \Delta_t\Bigr) $$</div>
+            <div class="eqnote"># H = number of tool calls · defaults c = 0.04, α = 1.0 · asymmetric clip ε⁻=0.2, ε⁺=0.28</div>
+          </div>
+          <p style="color:var(--muted); font-size:.95rem; margin-top:1rem">
+            The reward is sparse and sequence-level: <b>answer correctness</b> (LLM-judge) <b>+ format</b> − a <b>tool-cost penalty</b> <span style="font-family:var(--font-mono)">λ·(#calls / H<sub>max</sub>)</span>, encouraging efficient retrieval under a fixed budget.
+          </p>
+        </div>
+
+        <div class="card reveal d2">
+          <ul class="feature-list">
+            <li>
+              <span class="ico ico--image">🖼</span>
+              <div><h4>Image search</h4><p>Reverse-image retrieval over a Wikipedia KB with an exclusion list, so repeated calls surface <i>new</i> candidates under appearance variation.</p></div>
+            </li>
+            <li>
+              <span class="ico ico--text">🔎</span>
+              <div><h4>Text search</h4><p>A model-rewritten query drives dense retrieval to fill in missing attributes once the entity is known.</p></div>
+            </li>
+            <li>
+              <span class="ico ico--violet">⏹</span>
+              <div><h4>Stop</h4><p>The policy decides on its own when the gathered evidence is sufficient and emits the final answer.</p></div>
+            </li>
+            <li>
+              <span class="ico ico--ink">🧭</span>
+              <div><h4>Two-stage training</h4><p>Rejection-sampling SFT cold-start teaches valid tool-call formats; RL with TN-GSPO learns the search policy.</p></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== RESULTS ============================== -->
+  <section id="results">
+    <div class="wrap">
+      <span class="section-tag">Results</span>
+      <h2 class="section-title">State of the art on E-VQA and InfoSeek</h2>
+
+      <div class="stat-row">
+        <div class="stat reveal"><div class="stat__k">52.6</div><div class="stat__l">E-VQA (All) · Qwen3-VL-8B</div></div>
+        <div class="stat reveal d1"><div class="stat__k">53.4</div><div class="stat__l">InfoSeek (All) · Qwen3-VL-8B</div></div>
+        <div class="stat reveal d2"><div class="stat__k">35.1 <span class="arrow">→</span> 53.0</div><div class="stat__l">Base → Cold-Start → RL (avg.)</div></div>
+      </div>
+
+      <div class="tablewrap reveal" style="margin-top:1.6rem">
+        <table class="res">
+          <thead>
+            <tr>
+              <th>Method</th><th>Retriever</th><th>Model</th>
+              <th>E-VQA<br>Single</th><th>E-VQA<br>All</th><th>InfoSeek<br>All</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Qwen3-VL-8B <span style="color:var(--muted-2)">(zero-shot)</span></td><td>—</td><td>—</td><td>25.3</td><td>24.8</td><td>25.7</td></tr>
+            <tr><td>MMSearch-R1</td><td>BGE + EVA-CLIP</td><td>Qwen2.5-VL-7B</td><td>40.6</td><td>40.7</td><td>39.7</td></tr>
+            <tr><td>CC-VQA</td><td>EVA-CLIP-8B</td><td>Qwen2.5-VL-7B</td><td>41.4</td><td>36.1</td><td>45.1</td></tr>
+            <tr><td>REAL</td><td>EVA-CLIP-8B</td><td>Qwen3-VL-8B</td><td>45.5</td><td>41.4</td><td>44.1</td></tr>
+            <tr class="ours"><td>ProMSA (Ours)</td><td>BGE + EVA-CLIP</td><td>Qwen2.5-VL-7B</td><td>50.0</td><td>49.7</td><td>49.2</td></tr>
+            <tr class="ours"><td>ProMSA (Ours)</td><td>BGE + EVA-CLIP</td><td>Qwen3-VL-8B</td><td class="best">52.2</td><td class="best">52.6</td><td class="best">53.4</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="res-note">E-VQA reported with BEM; InfoSeek with VQA accuracy. See the paper for the full comparison, tool / budget / top-<i>k</i> ablations, inference-time analysis, and OK-VQA generalization.</p>
+
+      <div class="fig-row">
+        <figure class="fig reveal">
+          <img src="static/images/training_dynamics.png" alt="Tool usage and training dynamics across RL strategies.">
+          <figcaption class="figcap"><b>Tool usage & training dynamics.</b> RL reshapes the image-vs-text ratio; TN-GSPO keeps the tool-call count in a stable range while reward rises and responses shorten.</figcaption>
+        </figure>
+        <figure class="fig reveal d1">
+          <img src="static/images/retrieval_examples.png" alt="Image-search retrieval examples showing rank variation.">
+          <figcaption class="figcap"><b>Retrieval examples.</b> The correct entity may sit at rank-1 or deep in the list — rank variation that motivates adaptive, multi-round retrieval.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== BIBTEX ============================== -->
+  <section id="bibtex" class="bibtex">
+    <div class="wrap">
+      <span class="section-tag">Citation</span>
+      <h2 class="section-title">BibTeX</h2>
+      <div class="codewrap reveal">
+        <button class="copybtn" id="copybtn" type="button">Copy</button>
+<pre class="bib" id="bibtext"><span class="k">@inproceedings</span>{promsa2026,
+  title     = {ProMSA: Progressive Multimodal Search Agents for
+               Knowledge-Based Visual Question Answering},
+  author    = {Wu, ZhengXian and Xu, Hangrui and Shi, Kai and Chen, Zhuohong and
+               Yu, Yunyao and Zhang, Chuanrui and Liao, Zirui and Yang, Jun and
+               Yang, Zhenyu and Lu, Haonan and Wang, Haoqian},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  year      = {2026}
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer class="footer">
+    <div class="wrap">
+      <span>© 2026 ProMSA</span>
+      <span class="credit">Accepted to ECCV 2026 · Built with figures from the paper.</span>
+    </div>
+  </footer>
+
+  <!-- ============================== SCRIPTS ============================== -->
+  <script>
+    // Intro splash: play the entry animation, then lift to reveal the page.
+    (function () {
+      const splash = document.getElementById("splash");
+      const skip = document.getElementById("splashSkip");
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let done = false;
+
+      function finish() {
+        if (done) return;
+        done = true;
+        splash.classList.add("splash--out");
+        document.body.classList.remove("loading");
+        setTimeout(() => { splash.style.display = "none"; }, 850);
+      }
+
+      if (reduce) {                 // honor reduced-motion: no animation at all
+        splash.style.display = "none";
+        document.body.classList.remove("loading");
+        return;
+      }
+
+      skip && skip.addEventListener("click", finish);
+      splash.addEventListener("click", (e) => { if (e.target !== skip) finish(); });
+      // auto-dismiss after the sequence settles
+      setTimeout(finish, 2400);
+    })();
+
+    // KaTeX render
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [{ left: "$$", right: "$$", display: true }],
+          throwOnError: false
+        });
+      }
+    });
+
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+    // Copy BibTeX
+    const btn = document.getElementById("copybtn");
+    btn && btn.addEventListener("click", () => {
+      const txt = document.getElementById("bibtext").innerText;
+      navigator.clipboard.writeText(txt).then(() => {
+        btn.textContent = "Copied!";
+        setTimeout(() => (btn.textContent = "Copy"), 1600);
+      });
+    });
+  </script>
+</body>
+</html>
