@@ -5,6 +5,7 @@
 ### Progressive Multimodal Search Agents for Knowledge-Based Visual Question Answering
 
 [![Paper](https://img.shields.io/badge/Paper-ECCV%202026-b31b1b.svg)](#-citation)
+[![Project Page](https://img.shields.io/badge/Project-Page-brightgreen.svg)](https://dingwu1021.github.io/ProMSA/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![Framework](https://img.shields.io/badge/RL-veRL-orange.svg)](https://github.com/volcengine/verl)
