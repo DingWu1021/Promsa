@@ -136,12 +136,6 @@ where `H = #tool_calls`, with `c = 0.04`, `α = 1.0` by default. The reward comb
 <sub><b>Tool usage & training dynamics.</b> Left: text- vs. image-search ratio before/after RL. Right: TN-GSPO keeps the tool-call count in a stable range (GRPO collapses it too fast), while reward rises and responses shorten as the policy converges.</sub>
 </div>
 
-<div align="center">
-<img src="assets/retrieval_examples.png" alt="Image-search retrieval examples" width="88%">
-<br>
-<sub><b>Retrieval examples.</b> The correct entity may appear at rank-1 or only deep in the candidate list — rank variation that motivates adaptive, multi-round retrieval rather than a fixed top-<i>k</i>.</sub>
-</div>
-
 ---
 
 ## 🗂 Repository Structure
