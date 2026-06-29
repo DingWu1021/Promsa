@@ -4,7 +4,7 @@
 
 ### Progressive Multimodal Search Agents for Knowledge-Based Visual Question Answering
 
-[![Paper](https://img.shields.io/badge/Paper-ECCV%202026-b31b1b.svg)](#-citation)
+[![Paper](https://img.shields.io/badge/Paper-ECCV%202026-b31b1b.svg)](https://arxiv.org/abs/2606.27974)
 [![Project Page](https://img.shields.io/badge/Project-Page-brightgreen.svg)](https://dingwu1021.github.io/ProMSA/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
@@ -476,12 +476,14 @@ ProMSA is built on top of excellent open-source work:
 If you find ProMSA useful, please cite:
 
 ```bibtex
-@inproceedings{promsa2026,
-  title     = {ProMSA: Progressive Multimodal Search Agents for Knowledge-Based Visual Question Answering},
-  author    = {Wu, ZhengXian and Xu, Hangrui and Shi, Kai and Chen, Zhuohong and Yu, Yunyao and
-               Zhang, Chuanrui and Liao, Zirui and Yang, Jun and Yang, Zhenyu and Lu, Haonan and Wang, Haoqian},
-  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
-  year      = {2026}
+@misc{wu2026promsaprogressivemultimodalsearchagents,
+      title={ProMSA:Progressive Multimodal Search Agents for Knowledge-Based Visual Question Answering}, 
+      author={ZhengXian Wu and Hangrui Xu and Kai Shi and Zhuohong Chen and Yunyao Yu and Chuanrui Zhang and Zirui Liao and Jun Yang and Zhenyu Yang and Haonan Lu and Haoqian Wang},
+      year={2026},
+      eprint={2606.27974},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2606.27974}, 
 }
 ```
 
